@@ -27,4 +27,5 @@ jobs:
       - run: npm audit --audit-level=moderate
       - name: Limites da verificacao
         if: always()
-        run: echo 'Sem lockfile versionado: resolucao de dependencias parcial. Check verifica sintaxe, nao comportamento completo do servidor. Nenhum acesso ao banco realizado.' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo 'Sem lockfile versionado: resolucao de dependencias parcial. Check verifica sintaxe, nao comportamento completo do servidor. Nenhum acesso ao banco realizado.' >> "$GITHUB_STEP_SUMMARY"
