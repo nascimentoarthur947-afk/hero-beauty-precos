@@ -1,0 +1,30 @@
+name: Arthur Dev Monitor
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '21 12 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: arthur-monitor-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts --package-lock-only
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - run: npm audit --audit-level=moderate
+      - name: Limites da verificacao
+        if: always()
+        run: echo 'Sem lockfile versionado: resolucao de dependencias parcial. Check verifica sintaxe, nao comportamento completo do servidor. Nenhum acesso ao banco realizado.' >> "$GITHUB_STEP_SUMMARY"
